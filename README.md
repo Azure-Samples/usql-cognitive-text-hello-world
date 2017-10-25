@@ -7,6 +7,7 @@ author: saveenr
 # USQL/Cognitive Text Hello World
 
 
+
 ```
 REFERENCE ASSEMBLY [TextCommon];
 REFERENCE ASSEMBLY [TextSentiment];
@@ -21,14 +22,8 @@ REFERENCE ASSEMBLY [TextKeyPhrase];
     FROM @"/usqlext/samples/cognition/war_and_peace.csv"
     USING Extractors.Csv();
 
-OUTPUT @WarAndPeace 
-    TO "/output.csv"
-    USING Outputers.Csv();    
-```
+// Extract key phrases for each paragraph
 
-### Extract key phrases for each paragraph
-
-```
 @keyphrase =
     PROCESS @WarAndPeace
     PRODUCE No,
@@ -55,12 +50,9 @@ OUTPUT @WarAndPeace
     FROM @keyphrase
         CROSS APPLY
             new Cognition.Text.Splitter("KeyPhrase") AS T(KeyPhrase);
-```
 
+//  Perform sentiment analysis on each paragraph
 
-### Perform sentiment analysis on each paragraph
-
-```
 @sentiment =
     PROCESS @WarAndPeace
     PRODUCE No,
@@ -76,4 +68,14 @@ OUTPUT @WarAndPeace
             Chapter,
             Text
     USING new Cognition.Text.SentimentAnalyzer(true);
+
+
+OUTPUT @keyphrase 
+    TO "/keyphrase.csv"
+    USING Outputers.Csv();
+    
+OUTPUT @sentiment 
+    TO "/sentiment.csv"
+    USING Outputers.Csv();
+    
 ```
