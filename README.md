@@ -72,10 +72,10 @@ REFERENCE ASSEMBLY [TextKeyPhrase];
 
 OUTPUT @keyphrase 
     TO "/keyphrase.csv"
-    USING Outputers.Csv();
+    USING Outputters.Csv();
     
 OUTPUT @sentiment 
     TO "/sentiment.csv"
-    USING Outputers.Csv();
+    USING Outputters.Csv();
     
 ```
