@@ -7,8 +7,6 @@ author: saveenr
 # USQL/Cognitive Text Hello World
 
 
-### Input data
-
 ```
 REFERENCE ASSEMBLY [TextCommon];
 REFERENCE ASSEMBLY [TextSentiment];
@@ -22,6 +20,10 @@ REFERENCE ASSEMBLY [TextKeyPhrase];
             Text string
     FROM @"/usqlext/samples/cognition/war_and_peace.csv"
     USING Extractors.Csv();
+
+OUTPUT @WarAndPeace 
+    TO "/output.csv"
+    USING Outputers.Csv();    
 ```
 
 ### Extract key phrases for each paragraph
