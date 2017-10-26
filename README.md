@@ -6,10 +6,7 @@ author: saveenr
 
 # USQL/Cognitive Text Hello World
 
-
-
 ```
-REFERENCE ASSEMBLY [TextCommon];
 REFERENCE ASSEMBLY [TextSentiment];
 REFERENCE ASSEMBLY [TextKeyPhrase];
 
