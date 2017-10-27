@@ -4,7 +4,7 @@ platforms: dotnet
 author: saveenr
 ---
 
-# USQL/Cognitive Text Hello World
+# U-SQL/Cognitive Text Hello World
 
 ```
 REFERENCE ASSEMBLY [TextSentiment];
@@ -36,19 +36,24 @@ REFERENCE ASSEMBLY [TextKeyPhrase];
             Text
     USING new Cognition.Text.KeyPhraseExtractor();
 
-// Tokenize the key phrases.
-@kpsplits =
+@keyphrase =
     SELECT No,
-        Year,
-        Book,
-        Chapter,
-        Text,
-        T.KeyPhrase
-    FROM @keyphrase
-        CROSS APPLY
-            new Cognition.Text.Splitter("KeyPhrase") AS T(KeyPhrase);
+            Year,
+            Book,
+            Chapter,
+            Text,
+            SqlArray.Create(KeyPhrase.Split(';')) AS KeyPhraseArray  
+    FROM @keyphrase;
 
-//  Perform sentiment analysis on each paragraph
+@split_keyphrases =
+    SELECT No,
+            Year,
+            Book,
+            Chapter,
+            Text,
+            KeyPhrase  
+    FROM @keyphrase
+        CROSS APPLY EXPLODE (KeyPhraseArray) AS r(KeyPhrase);
 
 @sentiment =
     PROCESS @WarAndPeace
@@ -66,13 +71,12 @@ REFERENCE ASSEMBLY [TextKeyPhrase];
             Text
     USING new Cognition.Text.SentimentAnalyzer(true);
 
-
-OUTPUT @keyphrase 
-    TO "/keyphrase.csv"
+OUTPUT @split_keyphrases 
+    TO "/split_keyphrases.csv"
     USING Outputters.Csv();
-    
+
 OUTPUT @sentiment 
     TO "/sentiment.csv"
     USING Outputters.Csv();
-    
+
 ```
